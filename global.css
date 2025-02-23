@@ -33,3 +33,30 @@ html, body {
     height: 100%;
     pointer-events: auto;
 }
+
+header {
+    display: flex;
+    gap: 1em;
+    align-items: baseline;
+    margin-left: auto;
+    width: 100%;
+}
+
+h1 {
+    margin-right: auto;
+}
+
+#any-time {
+    display: block;
+    color: gray;
+    font-style: italic;
+}
+
+time {
+    display: block;
+}
+
+label {
+    display: flex;
+    align-items: flex-start;
+}
