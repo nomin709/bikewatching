@@ -60,3 +60,48 @@ label {
     display: flex;
     align-items: flex-start;
 }
+
+:root {
+    --color-departures: steelblue;
+    --color-arrivals: darkorange;
+}
+
+circle {
+    --color: color-mix(
+        in oklch,
+        var(--color-departures) calc(100% * var(--departure-ratio)),
+        var(--color-arrivals)
+    );
+    fill: var(--color);
+}
+
+.legend {
+    display: flex;
+    gap: 3em;
+    padding: 1.5em;
+}
+
+.legend label {
+    color: gray;
+}
+
+
+.legend > div {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.legend > div::before {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    --color: color-mix(
+        in oklch,
+        var(--color-departures) calc(100% * var(--departure-ratio)),
+        var(--color-arrivals)
+    );
+    background-color: var(--color);
+}
