@@ -15,8 +15,8 @@ map.on('load', async () => {
     // Common style for bike lanes
     const bikeLaneStyle = {
         'line-color': 'green',  // A bright green using hex code
-        'line-width': 5,        // Thicker lines
-        'line-opacity': 0.6     // Slightly less transparent
+        'line-width': 3,        // Thicker lines
+        'line-opacity': 0.5     // Slightly less transparent
     };
 
     // First data source: Existing bike network (Boston)
@@ -86,7 +86,7 @@ map.on('load', async () => {
             .attr('fill', 'steelblue')  // Circle fill color
             .attr('stroke', 'white')    // Circle border color
             .attr('stroke-width', 1)    // Circle border thickness
-            .attr('opacity', 0.6)      // Circle opacity
+            .attr('opacity', 0.8)      // Circle opacity
             .attr('r', d => radiusScale(d.totalTraffic))
             .each(function(d) {
                 // Add <title> for browser tooltips
@@ -94,7 +94,8 @@ map.on('load', async () => {
                 .append('title')
                 .text(`${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals)`);
             })
-            .style("--departure-ratio", d => stationFlow(d.departures / d.totalTraffic));
+            .style("--departure-ratio", d => stationFlow(d.departures / d.totalTraffic))
+            .attr("pointer-events", "auto");
 
         // Function to update circle positions when the map moves/zooms
         function updatePositions() {
@@ -142,10 +143,16 @@ map.on('load', async () => {
 
             // Update the scatterplot by adjusting the radius of circles
             circles
-              .data(filteredStations, (d) => d.short_name)
-              .join('circle') // Ensure the data is bound correctly
-              .attr('r', (d) => radiusScale(d.totalTraffic)) // Update circle sizes
-              .style("--departure-ratio", d => stationFlow(d.departures / d.totalTraffic));
+                .data(filteredStations, (d) => d.short_name)
+                .join('circle') // Ensure the data is bound correctly
+                .attr('r', (d) => radiusScale(d.totalTraffic)) // Update circle sizes
+                .style('opacity', (d) => {
+                    return d.departures === 0 ? 0 : 0.6; // Make the circle disappear if no departures
+                })
+                .style('--departure-ratio', (d) => {
+                    // If there are no departures, set --departure-ratio to a neutral value
+                    return d.departures === 0 ? 0 : stationFlow(d.departures / d.totalTraffic);
+                });
         }
 
         timeSlider.addEventListener('input', updateTimeDisplay);
